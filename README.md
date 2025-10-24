@@ -18,8 +18,8 @@ A modern, production-quality URL shortener built with Next.js, Tailwind CSS, Pri
 - **UI Components**: ShadCN UI, Radix UI primitives
 - **Animations**: Framer Motion
 - **Backend**: Next.js API Routes
-- **Database**: Prisma ORM with PostgreSQL (Supabase)
-- **Deployment**: Vercel (frontend + API), Supabase (database)
+- **Database**: Prisma ORM with PostgreSQL (Railway)
+- **Deployment**: Railway (full-stack hosting)
 
 ## 📦 Installation
 
@@ -72,23 +72,25 @@ model ShortUrl {
 
 ## 🚀 Deployment
 
-### Vercel + Supabase
+### Railway (Recommended)
 
-1. **Deploy to Vercel**
-   - Connect your GitHub repository to Vercel
-   - Add environment variables in Vercel dashboard
-   - Deploy automatically on push
+1. **Deploy to Railway**
+   - Connect your GitHub repository to Railway
+   - Railway automatically detects Next.js and sets up the environment
+   - Add PostgreSQL database from Railway dashboard
 
-2. **Set up Supabase**
-   - Create a new Supabase project
-   - Get your database URL
-   - Run migrations: `npx prisma db push`
-
-3. **Environment Variables**
+2. **Environment Variables**
    ```env
    DATABASE_URL="postgresql://postgres:[password]@[host]:5432/postgres"
-   NEXT_PUBLIC_APP_URL="https://your-app.vercel.app"
+   NEXT_PUBLIC_APP_URL="https://your-app.up.railway.app"
    ```
+
+3. **Database Setup**
+   ```bash
+   npx prisma db push
+   ```
+
+Your app will be available at: `https://your-app.up.railway.app`
 
 ## 📁 Project Structure
 
