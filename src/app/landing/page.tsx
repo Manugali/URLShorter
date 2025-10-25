@@ -170,6 +170,8 @@ function LiveUrlShortener({ setIsSignup }: { setIsSignup: (value: boolean) => vo
           <div className="flex flex-col sm:flex-row gap-2">
             <input
               type="url"
+              value=""
+              readOnly
               placeholder="Enter your long URL here..."
               className="flex-1 px-4 py-3 rounded-lg text-white bg-gray-700/50 border border-gray-600/50 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50"
             />
@@ -255,6 +257,7 @@ function LiveUrlShortener({ setIsSignup }: { setIsSignup: (value: boolean) => vo
 function LandingPageContent() {
   const searchParams = useSearchParams();
   const [isSignup, setIsSignup] = useState(false);
+  const [currentSection, setCurrentSection] = useState('hero');
 
   // Check if we should show signup mode from URL params
   useEffect(() => {
@@ -274,23 +277,70 @@ function LandingPageContent() {
       {/* Header */}
       <header className="bg-black/80 backdrop-blur-md border-b border-gray-800/50 sticky top-0 z-50">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex items-center gap-3">
-            <div className="p-2 bg-gradient-to-r from-purple-600 to-violet-600 rounded-xl shadow-lg shadow-purple-500/25">
-              <Link className="h-6 w-6 text-white" />
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-gradient-to-r from-purple-600 to-violet-600 rounded-xl shadow-lg shadow-purple-500/25">
+                <Link className="h-6 w-6 text-white" />
+              </div>
+              <h1 className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-violet-400 bg-clip-text text-transparent">
+                Shortly
+              </h1>
             </div>
-            <h1 className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-violet-400 bg-clip-text text-transparent">
-              Shortly
-            </h1>
+            
+            {/* Mobile Section Title */}
+            <div className="lg:hidden">
+              <h2 className="text-lg font-semibold text-white">
+                {currentSection === 'hero' && 'Demo'}
+                {currentSection === 'features' && 'Features'}
+                {currentSection === 'auth' && (isSignup ? 'Sign Up' : 'Sign In')}
+              </h2>
+            </div>
           </div>
         </div>
       </header>
+
+      {/* Mobile Navigation */}
+      <div className="lg:hidden bg-black/50 backdrop-blur-sm border-b border-gray-800/50 sticky top-16 z-40">
+        <div className="flex justify-center space-x-1 py-2">
+          <button
+            onClick={() => setCurrentSection('hero')}
+            className={`px-3 py-1 rounded-full text-xs font-medium transition-all ${
+              currentSection === 'hero' 
+                ? 'bg-purple-600 text-white' 
+                : 'text-gray-400 hover:text-white'
+            }`}
+          >
+            Demo
+          </button>
+          <button
+            onClick={() => setCurrentSection('features')}
+            className={`px-3 py-1 rounded-full text-xs font-medium transition-all ${
+              currentSection === 'features' 
+                ? 'bg-purple-600 text-white' 
+                : 'text-gray-400 hover:text-white'
+            }`}
+          >
+            Features
+          </button>
+          <button
+            onClick={() => setCurrentSection('auth')}
+            className={`px-3 py-1 rounded-full text-xs font-medium transition-all ${
+              currentSection === 'auth' 
+                ? 'bg-purple-600 text-white' 
+                : 'text-gray-400 hover:text-white'
+            }`}
+          >
+            {isSignup ? 'Sign Up' : 'Sign In'}
+          </button>
+        </div>
+      </div>
 
       {/* Hero Section */}
       <main className="flex-1 flex items-center justify-center px-4 sm:px-6 lg:px-8 py-16 relative z-10">
         <div className="max-w-6xl w-full">
           <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center min-h-[400px] lg:min-h-[600px] animate-fade-in-up">
           {/* Left Side - Hero Content */}
-          <div className="space-y-6 sm:space-y-8 text-center lg:text-left">
+          <div className={`space-y-6 sm:space-y-8 text-center lg:text-left ${currentSection !== 'hero' ? 'lg:block hidden' : ''}`}>
             <div className="space-y-6">
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-white via-purple-200 to-white bg-clip-text text-transparent leading-tight">
                 <TypewriterText text="Shorten URLs" speed={150} />
@@ -308,61 +358,63 @@ function LandingPageContent() {
             {/* Live Demo */}
             <LiveUrlShortener setIsSignup={setIsSignup} />
 
-            {/* Features */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
-              <div className="group relative flex items-center gap-3 p-4 bg-gray-800/50 rounded-lg border border-gray-700/50 hover:bg-gray-700/50 hover:border-purple-500/50 transition-all duration-300 cursor-pointer">
-                <Zap className="h-6 w-6 text-purple-400 group-hover:text-purple-300 transition-colors duration-300" />
-                <span className="text-white font-medium group-hover:text-purple-100 transition-colors duration-300">Lightning Fast</span>
+            {/* Features - Desktop Only */}
+            <div className="hidden lg:block">
+              <div className="grid grid-cols-3 gap-6">
+                <div className="group relative flex items-center gap-3 p-4 bg-gray-800/50 rounded-lg border border-gray-700/50 hover:bg-gray-700/50 hover:border-purple-500/50 transition-all duration-300 cursor-pointer">
+                  <Zap className="h-6 w-6 text-purple-400 group-hover:text-purple-300 transition-colors duration-300" />
+                  <span className="text-white font-medium group-hover:text-purple-100 transition-colors duration-300">Lightning Fast</span>
+                  
+                  {/* Tooltip */}
+                  <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-gray-900 text-white text-sm rounded-lg shadow-lg opacity-0 group-hover:opacity-100 group-focus:opacity-100 transition-opacity duration-300 pointer-events-none z-50 w-64 text-center">
+                    Generate short URLs in milliseconds with our optimized infrastructure. No waiting, no delays.
+                    <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900"></div>
+                  </div>
+                </div>
                 
-                {/* Tooltip */}
-                <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-gray-900 text-white text-sm rounded-lg shadow-lg opacity-0 group-hover:opacity-100 group-focus:opacity-100 transition-opacity duration-300 pointer-events-none z-50 w-64 text-center hidden sm:block">
-                  Generate short URLs in milliseconds with our optimized infrastructure. No waiting, no delays.
-                  <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900"></div>
+                <div className="group relative flex items-center gap-3 p-4 bg-gray-800/50 rounded-lg border border-gray-700/50 hover:bg-gray-700/50 hover:border-purple-500/50 transition-all duration-300 cursor-pointer">
+                  <Shield className="h-6 w-6 text-purple-400 group-hover:text-purple-300 transition-colors duration-300" />
+                  <span className="text-white font-medium group-hover:text-purple-100 transition-colors duration-300">Secure</span>
+                  
+                  {/* Tooltip */}
+                  <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-gray-900 text-white text-sm rounded-lg shadow-lg opacity-0 group-hover:opacity-100 group-focus:opacity-100 transition-opacity duration-300 pointer-events-none z-50 w-64 text-center">
+                    Enterprise-grade security with encrypted links and privacy protection. Your data is always safe.
+                    <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900"></div>
+                  </div>
+                </div>
+                
+                <div className="group relative flex items-center gap-3 p-4 bg-gray-800/50 rounded-lg border border-gray-700/50 hover:bg-gray-700/50 hover:border-purple-500/50 transition-all duration-300 cursor-pointer">
+                  <BarChart3 className="h-6 w-6 text-purple-400 group-hover:text-purple-300 transition-colors duration-300" />
+                  <span className="text-white font-medium group-hover:text-purple-100 transition-colors duration-300">Analytics</span>
+                  
+                  {/* Tooltip */}
+                  <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-gray-900 text-white text-sm rounded-lg shadow-lg opacity-0 group-hover:opacity-100 group-focus:opacity-100 transition-opacity duration-300 pointer-events-none z-50 w-64 text-center">
+                    Track clicks, locations, and engagement with detailed analytics. Make data-driven decisions.
+                    <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900"></div>
+                  </div>
                 </div>
               </div>
-              
-              <div className="group relative flex items-center gap-3 p-4 bg-gray-800/50 rounded-lg border border-gray-700/50 hover:bg-gray-700/50 hover:border-purple-500/50 transition-all duration-300 cursor-pointer">
-                <Shield className="h-6 w-6 text-purple-400 group-hover:text-purple-300 transition-colors duration-300" />
-                <span className="text-white font-medium group-hover:text-purple-100 transition-colors duration-300">Secure</span>
-                
-                {/* Tooltip */}
-                <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-gray-900 text-white text-sm rounded-lg shadow-lg opacity-0 group-hover:opacity-100 group-focus:opacity-100 transition-opacity duration-300 pointer-events-none z-50 w-64 text-center hidden sm:block">
-                  Enterprise-grade security with encrypted links and privacy protection. Your data is always safe.
-                  <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900"></div>
-                </div>
-              </div>
-              
-              <div className="group relative flex items-center gap-3 p-4 bg-gray-800/50 rounded-lg border border-gray-700/50 hover:bg-gray-700/50 hover:border-purple-500/50 transition-all duration-300 cursor-pointer">
-                <BarChart3 className="h-6 w-6 text-purple-400 group-hover:text-purple-300 transition-colors duration-300" />
-                <span className="text-white font-medium group-hover:text-purple-100 transition-colors duration-300">Analytics</span>
-                
-                {/* Tooltip */}
-                <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-gray-900 text-white text-sm rounded-lg shadow-lg opacity-0 group-hover:opacity-100 group-focus:opacity-100 transition-opacity duration-300 pointer-events-none z-50 w-64 text-center hidden sm:block">
-                  Track clicks, locations, and engagement with detailed analytics. Make data-driven decisions.
-                  <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900"></div>
-                </div>
-              </div>
-            </div>
 
-            {/* Statistics */}
-            <div className="grid grid-cols-3 gap-4 sm:gap-6 py-8 border-t border-gray-700/50">
-              <div className="text-center">
-                <div className="text-xl sm:text-2xl font-bold text-purple-400">
-                  <AnimatedCounter end={10000} suffix="+" />
+              {/* Statistics - Desktop Only */}
+              <div className="grid grid-cols-3 gap-6 py-8 border-t border-gray-700/50">
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-purple-400">
+                    <AnimatedCounter end={10000} suffix="+" />
+                  </div>
+                  <div className="text-sm text-gray-400">URLs Shortened</div>
                 </div>
-                <div className="text-xs sm:text-sm text-gray-400">URLs Shortened</div>
-              </div>
-              <div className="text-center">
-                <div className="text-xl sm:text-2xl font-bold text-purple-400">
-                  <AnimatedCounter end={99.9} suffix="%" />
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-purple-400">
+                    <AnimatedCounter end={99.9} suffix="%" />
+                  </div>
+                  <div className="text-sm text-gray-400">Uptime</div>
                 </div>
-                <div className="text-xs sm:text-sm text-gray-400">Uptime</div>
-              </div>
-              <div className="text-center">
-                <div className="text-xl sm:text-2xl font-bold text-purple-400">
-                  <AnimatedCounter end={1} suffix="ms" />
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-purple-400">
+                    <AnimatedCounter end={1} suffix="ms" />
+                  </div>
+                  <div className="text-sm text-gray-400">Response Time</div>
                 </div>
-                <div className="text-xs sm:text-sm text-gray-400">Response Time</div>
               </div>
             </div>
 
@@ -374,8 +426,66 @@ function LandingPageContent() {
             </div>
           </div>
 
+          {/* Features Section - Mobile Only */}
+          <div className={`lg:hidden ${currentSection !== 'features' ? 'hidden' : ''}`}>
+            <div className="space-y-8">
+              <div className="text-center">
+                <h2 className="text-3xl font-bold text-white mb-4">Features</h2>
+                <p className="text-gray-300">Everything you need to manage your URLs</p>
+              </div>
+              
+              <div className="space-y-6">
+                <div className="flex items-center gap-4 p-4 bg-gray-800/50 rounded-lg border border-gray-700/50">
+                  <Zap className="h-8 w-8 text-purple-400" />
+                  <div>
+                    <h3 className="text-white font-semibold">Lightning Fast</h3>
+                    <p className="text-gray-400 text-sm">Generate short URLs in milliseconds with our optimized infrastructure.</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-center gap-4 p-4 bg-gray-800/50 rounded-lg border border-gray-700/50">
+                  <Shield className="h-8 w-8 text-purple-400" />
+                  <div>
+                    <h3 className="text-white font-semibold">Secure</h3>
+                    <p className="text-gray-400 text-sm">Enterprise-grade security with encrypted links and privacy protection.</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-center gap-4 p-4 bg-gray-800/50 rounded-lg border border-gray-700/50">
+                  <BarChart3 className="h-8 w-8 text-purple-400" />
+                  <div>
+                    <h3 className="text-white font-semibold">Analytics</h3>
+                    <p className="text-gray-400 text-sm">Track clicks, locations, and engagement with detailed analytics.</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Statistics */}
+              <div className="grid grid-cols-3 gap-4 py-8 border-t border-gray-700/50">
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-purple-400">
+                    <AnimatedCounter end={10000} suffix="+" />
+                  </div>
+                  <div className="text-sm text-gray-400">URLs Shortened</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-purple-400">
+                    <AnimatedCounter end={99.9} suffix="%" />
+                  </div>
+                  <div className="text-sm text-gray-400">Uptime</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-purple-400">
+                    <AnimatedCounter end={1} suffix="ms" />
+                  </div>
+                  <div className="text-sm text-gray-400">Response Time</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
           {/* Right Side - Auth Form */}
-          <div className="flex flex-col items-center justify-center space-y-4">
+          <div className={`flex flex-col items-center justify-center space-y-4 ${currentSection !== 'auth' ? 'lg:flex hidden' : ''}`}>
             {/* Toggle Button */}
             <div className="flex bg-gray-800/50 rounded-lg p-1 shadow-lg">
               <button
@@ -421,15 +531,17 @@ function LandingPageContent() {
 
 export default function LandingPage() {
   return (
-    <Suspense fallback={
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-purple-900 flex items-center justify-center">
-        <div className="flex items-center gap-3">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-400"></div>
-          <span className="text-xl text-white">Loading...</span>
+    <div suppressHydrationWarning>
+      <Suspense fallback={
+        <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-purple-900 flex items-center justify-center">
+          <div className="flex items-center gap-3">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-400"></div>
+            <span className="text-xl text-white">Loading...</span>
+          </div>
         </div>
-      </div>
-    }>
-      <LandingPageContent />
-    </Suspense>
+      }>
+        <LandingPageContent />
+      </Suspense>
+    </div>
   );
 }
