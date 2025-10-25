@@ -1,9 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { isValidUrl, generateShortCode } from '@/lib/utils'
 
 export async function POST(request: NextRequest) {
   try {
+    const session = await auth()
     const body = await request.json()
     const { url } = body
 
@@ -55,7 +57,8 @@ export async function POST(request: NextRequest) {
       data: {
         originalUrl: trimmedUrl,
         shortCode,
-      },
+        userId: session?.user?.id || null,
+      } as any,
     })
 
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'

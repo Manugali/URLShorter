@@ -16,7 +16,7 @@ interface ShortUrl {
   createdAt: string
 }
 
-export default function Home() {
+export default function Dashboard() {
   const { data: session, status } = useSession()
   const router = useRouter()
   const [urls, setUrls] = useState<ShortUrl[]>([])
@@ -93,7 +93,7 @@ export default function Home() {
       <main className="flex-1 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="text-center mb-16">
           <h2 className="text-5xl font-bold bg-gradient-to-r from-white via-purple-200 to-white bg-clip-text text-transparent mb-6">
-            Shorten your URLs instantly
+            Welcome, {session?.user?.name || session?.user?.email}!
           </h2>
           <p className="text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
             Create short, memorable links that are easy to share and track. 

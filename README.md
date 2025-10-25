@@ -5,20 +5,23 @@ A modern, production-quality URL shortener built with Next.js, Tailwind CSS, Pri
 ## 🚀 Features
 
 - **URL Shortening**: Create short, memorable links from long URLs
+- **User Authentication**: Sign in with Google, GitHub, or email/password
+- **User Dashboard**: View and manage your shortened URLs
 - **Instant Redirects**: Fast server-side redirects for short URLs
 - **Modern UI**: Clean, responsive design with Tailwind CSS
 - **Smooth Animations**: Framer Motion for delightful interactions
-- **Local Storage**: URLs persist in browser for MVP
+- **Persistent Storage**: URLs saved to database for authenticated users
 - **Copy to Clipboard**: One-click copying with visual feedback
 - **Mobile Responsive**: Works perfectly on all devices
 
 ## 🛠️ Tech Stack
 
-- **Frontend**: Next.js 14 (App Router), TypeScript, Tailwind CSS
+- **Frontend**: Next.js 16 (App Router), TypeScript, Tailwind CSS
 - **UI Components**: ShadCN UI, Radix UI primitives
 - **Animations**: Framer Motion
+- **Authentication**: NextAuth.js with multiple providers
 - **Backend**: Next.js API Routes
-- **Database**: Prisma ORM with PostgreSQL (Railway)
+- **Database**: Prisma ORM with SQLite (local) / PostgreSQL (production)
 - **Deployment**: Railway (full-stack hosting)
 
 ## 📦 Installation
@@ -36,13 +39,16 @@ A modern, production-quality URL shortener built with Next.js, Tailwind CSS, Pri
 
 3. **Set up environment variables**
    ```bash
-   cp env.example .env.local
+   node scripts/setup-env.js
    ```
    
-   Update `.env.local` with your database URL:
+   The script creates `.env.local` with default configuration. For OAuth providers, update with your credentials:
    ```env
-   DATABASE_URL="postgresql://username:password@localhost:5432/urlshorter?schema=public"
-   NEXT_PUBLIC_APP_URL="http://localhost:3000"
+   # OAuth Providers (optional)
+   GOOGLE_CLIENT_ID="your-google-client-id"
+   GOOGLE_CLIENT_SECRET="your-google-client-secret"
+   GITHUB_CLIENT_ID="your-github-client-id"
+   GITHUB_CLIENT_SECRET="your-github-client-secret"
    ```
 
 4. **Set up the database**
@@ -62,11 +68,26 @@ A modern, production-quality URL shortener built with Next.js, Tailwind CSS, Pri
 ## 🗄️ Database Schema
 
 ```prisma
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  emailVerified DateTime?
+  image         String?
+  accounts      Account[]
+  sessions      Session[]
+  shortUrls     ShortUrl[]
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
 model ShortUrl {
   id          String   @id @default(cuid())
   originalUrl String
   shortCode   String   @unique
   createdAt   DateTime @default(now())
+  userId      String?
+  user        User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
 }
 ```
 
@@ -163,7 +184,7 @@ The app uses a custom design system built with:
 
 ## 🔮 Future Enhancements
 
-- [ ] User authentication (NextAuth.js or Clerk)
+- [x] User authentication (NextAuth.js)
 - [ ] Analytics dashboard (click tracking, geolocation)
 - [ ] Custom domains
 - [ ] Bulk URL shortening
