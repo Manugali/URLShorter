@@ -3,7 +3,7 @@
 import { LoginForm } from "@/components/LoginForm";
 import { SignupForm } from "@/components/SignupForm";
 import { Link, Zap, Shield, BarChart3 } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 
 // Animated Counter Component
@@ -220,7 +220,7 @@ function LiveUrlShortener({ setIsSignup }: { setIsSignup: (value: boolean) => vo
   );
 }
 
-export default function LandingPage() {
+function LandingPageContent() {
   const searchParams = useSearchParams();
   const [isSignup, setIsSignup] = useState(false);
 
@@ -384,5 +384,20 @@ export default function LandingPage() {
         </div>
       </footer>
     </div>
+  );
+}
+
+export default function LandingPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-purple-900 flex items-center justify-center">
+        <div className="flex items-center gap-3">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-400"></div>
+          <span className="text-xl text-white">Loading...</span>
+        </div>
+      </div>
+    }>
+      <LandingPageContent />
+    </Suspense>
   );
 }
