@@ -103,12 +103,16 @@ function LiveUrlShortener({ setIsSignup }: { setIsSignup: (value: boolean) => vo
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [hasUsedDemo, setHasUsedDemo] = useState(false);
+  const [isClient, setIsClient] = useState(false);
 
   // Check if user has already used the demo
   useEffect(() => {
-    const demoUsed = localStorage.getItem('demo-used');
-    if (demoUsed === 'true') {
-      setHasUsedDemo(true);
+    setIsClient(true);
+    if (typeof window !== 'undefined') {
+      const demoUsed = localStorage.getItem('demo-used');
+      if (demoUsed === 'true') {
+        setHasUsedDemo(true);
+      }
     }
   }, []);
 
@@ -136,7 +140,9 @@ function LiveUrlShortener({ setIsSignup }: { setIsSignup: (value: boolean) => vo
       if (response.ok) {
         setShortUrl(data.shortUrl);
         // Mark demo as used
-        localStorage.setItem('demo-used', 'true');
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('demo-used', 'true');
+        }
         setHasUsedDemo(true);
       } else {
         setError(data.error || 'Failed to shorten URL');
@@ -151,6 +157,32 @@ function LiveUrlShortener({ setIsSignup }: { setIsSignup: (value: boolean) => vo
   const copyToClipboard = () => {
     navigator.clipboard.writeText(shortUrl);
   };
+
+  // Show loading state until client is ready
+  if (!isClient) {
+    return (
+      <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl p-6 border border-gray-700/50 shadow-xl">
+        <h3 className="text-xl font-semibold text-white mb-4 flex items-center gap-2">
+          <Link className="h-5 w-5 text-purple-400" />
+          Try it live - no signup required!
+        </h3>
+        <div className="space-y-4">
+          <div className="flex flex-col sm:flex-row gap-2">
+            <input
+              type="url"
+              placeholder="Enter your long URL here..."
+              className="flex-1 px-4 py-3 rounded-lg text-white bg-gray-700/50 border border-gray-600/50 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50"
+            />
+            <button
+              className="px-6 py-3 bg-purple-600 text-white rounded-lg font-medium transition-all duration-200 whitespace-nowrap"
+            >
+              Shorten
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl p-6 border border-gray-700/50 shadow-xl">
