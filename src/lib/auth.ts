@@ -31,11 +31,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         try {
           // Check database for registered users
           const user = await prisma.user.findUnique({
-            where: { email: credentials.email }
+            where: { email: credentials.email as string }
           });
 
           if (user && user.password) {
-            const isValidPassword = await bcrypt.compare(credentials.password, user.password);
+            const isValidPassword = await bcrypt.compare(credentials.password as string, user.password);
             if (isValidPassword) {
               return {
                 id: user.id,
