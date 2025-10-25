@@ -160,7 +160,7 @@ function LiveUrlShortener({ setIsSignup }: { setIsSignup: (value: boolean) => vo
       </h3>
       
       <div className="space-y-4">
-        <div className="flex gap-2">
+        <div className="flex flex-col sm:flex-row gap-2">
           <input
             type="url"
             value={url}
@@ -176,7 +176,7 @@ function LiveUrlShortener({ setIsSignup }: { setIsSignup: (value: boolean) => vo
           <button
             onClick={handleShorten}
             disabled={isLoading || !url || hasUsedDemo}
-            className="px-6 py-3 bg-purple-600 hover:bg-purple-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white rounded-lg font-medium transition-all duration-200 hover:scale-105 disabled:hover:scale-100"
+            className="px-6 py-3 bg-purple-600 hover:bg-purple-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white rounded-lg font-medium transition-all duration-200 hover:scale-105 disabled:hover:scale-100 whitespace-nowrap"
           >
             {isLoading ? 'Shortening...' : hasUsedDemo ? 'Sign Up Required' : 'Shorten'}
           </button>
@@ -199,7 +199,7 @@ function LiveUrlShortener({ setIsSignup }: { setIsSignup: (value: boolean) => vo
         {shortUrl && (
           <div className="space-y-2">
             <label className="text-sm text-gray-300">Your short URL:</label>
-            <div className="flex gap-2">
+            <div className="flex flex-col sm:flex-row gap-2">
               <input
                 type="text"
                 value={shortUrl}
@@ -208,7 +208,7 @@ function LiveUrlShortener({ setIsSignup }: { setIsSignup: (value: boolean) => vo
               />
               <button
                 onClick={copyToClipboard}
-                className="px-4 py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium transition-all duration-200 hover:scale-105"
+                className="px-4 py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium transition-all duration-200 hover:scale-105 whitespace-nowrap"
               >
                 Copy
               </button>
@@ -256,18 +256,18 @@ function LandingPageContent() {
       {/* Hero Section */}
       <main className="flex-1 flex items-center justify-center px-4 sm:px-6 lg:px-8 py-16 relative z-10">
         <div className="max-w-6xl w-full">
-          <div className="grid lg:grid-cols-2 gap-16 items-center min-h-[600px] animate-fade-in-up">
+          <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center min-h-[400px] lg:min-h-[600px] animate-fade-in-up">
           {/* Left Side - Hero Content */}
-          <div className="space-y-8 text-center lg:text-left">
+          <div className="space-y-6 sm:space-y-8 text-center lg:text-left">
             <div className="space-y-6">
-              <h1 className="text-6xl font-bold bg-gradient-to-r from-white via-purple-200 to-white bg-clip-text text-transparent leading-tight">
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-white via-purple-200 to-white bg-clip-text text-transparent leading-tight">
                 <TypewriterText text="Shorten URLs" speed={150} />
                 <br />
                 <span className="text-purple-400">
                   <TypewriterText text="Instantly" speed={150} />
                 </span>
               </h1>
-              <p className="text-xl text-gray-300 leading-relaxed">
+              <p className="text-lg sm:text-xl text-gray-300 leading-relaxed">
                 Create short, memorable links that are easy to share and track. 
                 Perfect for social media, marketing campaigns, and more.
               </p>
@@ -277,13 +277,13 @@ function LandingPageContent() {
             <LiveUrlShortener setIsSignup={setIsSignup} />
 
             {/* Features */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
               <div className="group relative flex items-center gap-3 p-4 bg-gray-800/50 rounded-lg border border-gray-700/50 hover:bg-gray-700/50 hover:border-purple-500/50 transition-all duration-300 cursor-pointer">
                 <Zap className="h-6 w-6 text-purple-400 group-hover:text-purple-300 transition-colors duration-300" />
                 <span className="text-white font-medium group-hover:text-purple-100 transition-colors duration-300">Lightning Fast</span>
                 
                 {/* Tooltip */}
-                <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-gray-900 text-white text-sm rounded-lg shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-50 w-64 text-center">
+                <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-gray-900 text-white text-sm rounded-lg shadow-lg opacity-0 group-hover:opacity-100 group-focus:opacity-100 transition-opacity duration-300 pointer-events-none z-50 w-64 text-center hidden sm:block">
                   Generate short URLs in milliseconds with our optimized infrastructure. No waiting, no delays.
                   <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900"></div>
                 </div>
@@ -294,7 +294,7 @@ function LandingPageContent() {
                 <span className="text-white font-medium group-hover:text-purple-100 transition-colors duration-300">Secure</span>
                 
                 {/* Tooltip */}
-                <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-gray-900 text-white text-sm rounded-lg shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-50 w-64 text-center">
+                <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-gray-900 text-white text-sm rounded-lg shadow-lg opacity-0 group-hover:opacity-100 group-focus:opacity-100 transition-opacity duration-300 pointer-events-none z-50 w-64 text-center hidden sm:block">
                   Enterprise-grade security with encrypted links and privacy protection. Your data is always safe.
                   <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900"></div>
                 </div>
@@ -305,7 +305,7 @@ function LandingPageContent() {
                 <span className="text-white font-medium group-hover:text-purple-100 transition-colors duration-300">Analytics</span>
                 
                 {/* Tooltip */}
-                <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-gray-900 text-white text-sm rounded-lg shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-50 w-64 text-center">
+                <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-gray-900 text-white text-sm rounded-lg shadow-lg opacity-0 group-hover:opacity-100 group-focus:opacity-100 transition-opacity duration-300 pointer-events-none z-50 w-64 text-center hidden sm:block">
                   Track clicks, locations, and engagement with detailed analytics. Make data-driven decisions.
                   <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900"></div>
                 </div>
@@ -313,30 +313,30 @@ function LandingPageContent() {
             </div>
 
             {/* Statistics */}
-            <div className="grid grid-cols-3 gap-6 py-8 border-t border-gray-700/50">
+            <div className="grid grid-cols-3 gap-4 sm:gap-6 py-8 border-t border-gray-700/50">
               <div className="text-center">
-                <div className="text-2xl font-bold text-purple-400">
+                <div className="text-xl sm:text-2xl font-bold text-purple-400">
                   <AnimatedCounter end={10000} suffix="+" />
                 </div>
-                <div className="text-sm text-gray-400">URLs Shortened</div>
+                <div className="text-xs sm:text-sm text-gray-400">URLs Shortened</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-purple-400">
+                <div className="text-xl sm:text-2xl font-bold text-purple-400">
                   <AnimatedCounter end={99.9} suffix="%" />
                 </div>
-                <div className="text-sm text-gray-400">Uptime</div>
+                <div className="text-xs sm:text-sm text-gray-400">Uptime</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-purple-400">
+                <div className="text-xl sm:text-2xl font-bold text-purple-400">
                   <AnimatedCounter end={1} suffix="ms" />
                 </div>
-                <div className="text-sm text-gray-400">Response Time</div>
+                <div className="text-xs sm:text-sm text-gray-400">Response Time</div>
               </div>
             </div>
 
             {/* CTA */}
             <div className="space-y-4">
-              <p className="text-lg text-gray-300">
+              <p className="text-base sm:text-lg text-gray-300">
                 Ready to get started? {isSignup ? 'Create an account' : 'Sign in'} to create your first short URL.
               </p>
             </div>
