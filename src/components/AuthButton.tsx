@@ -9,7 +9,7 @@ export function AuthButton() {
 
   if (status === "loading") {
     return (
-      <Button disabled>
+      <Button disabled className="cursor-not-allowed">
         <User className="w-4 h-4 mr-2" />
         Loading...
       </Button>
@@ -26,6 +26,7 @@ export function AuthButton() {
           onClick={() => signOut()}
           variant="outline"
           size="sm"
+          className="cursor-pointer"
         >
           <LogOut className="w-4 h-4 mr-2" />
           Sign Out
@@ -39,6 +40,7 @@ export function AuthButton() {
       onClick={() => signIn()}
       variant="default"
       size="sm"
+      className="cursor-pointer"
     >
       <LogIn className="w-4 h-4 mr-2" />
       Sign In
