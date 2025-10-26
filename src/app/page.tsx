@@ -13,6 +13,7 @@ interface ShortUrl {
   originalUrl: string
   shortCode: string
   shortUrl: string
+  clickCount: number
   createdAt: string
 }
 
