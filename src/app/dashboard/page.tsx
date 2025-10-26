@@ -102,7 +102,7 @@ export default function Dashboard() {
       </header>
 
       {/* Main Content */}
-      <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 lg:py-6">
+      <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 lg:py-6 flex flex-col justify-center min-h-0">
         {/* Welcome Section - Mobile Only */}
         <div className="text-center mb-4 lg:hidden">
           <h2 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-white via-purple-200 to-white bg-clip-text text-transparent mb-4 leading-tight">
@@ -130,10 +130,10 @@ export default function Dashboard() {
         </div>
 
         {/* Desktop Two-Column Layout */}
-        <div className="hidden lg:grid lg:grid-cols-12 lg:gap-8 xl:gap-12">
+        <div className="hidden lg:grid lg:grid-cols-12 lg:gap-8 xl:gap-12 lg:items-start">
           {/* Left Column - URL Form */}
           <div className="lg:col-span-5 xl:col-span-4">
-            <div className="sticky top-24">
+            <div className="lg:sticky lg:top-24">
               <div className="mb-8">
                 <div className="text-center lg:text-left">
                   <h2 className="text-3xl lg:text-4xl xl:text-5xl font-bold bg-gradient-to-r from-white via-purple-200 to-white bg-clip-text text-transparent mb-4 leading-tight">
@@ -178,8 +178,8 @@ export default function Dashboard() {
       </main>
 
       {/* Footer */}
-      <footer className="bg-black/50 backdrop-blur-sm border-t border-gray-800/50 mt-4 lg:mt-6">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-8">
+      <footer className="bg-black/50 backdrop-blur-sm border-t border-gray-800/50 mt-auto">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 lg:py-6">
           <div className="text-center text-gray-400">
             <p className="text-sm lg:text-base">&copy; 2024 Shortly. Transform long URLs into short, shareable links with enterprise-grade security and analytics.</p>
           </div>
