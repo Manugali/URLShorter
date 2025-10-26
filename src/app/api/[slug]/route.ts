@@ -25,7 +25,7 @@ export async function GET(
       )
     }
 
-    // Find the original URL
+    // Find the original URL and increment click count
     const shortUrl = await prisma.shortUrl.findUnique({
       where: { shortCode: trimmedSlug },
     })
@@ -36,6 +36,17 @@ export async function GET(
         { status: 404 }
       )
     }
+
+    // Increment click count (fire and forget)
+    console.log(`🔄 Incrementing click count for: ${trimmedSlug}, current: ${shortUrl.clickCount}`)
+    prisma.shortUrl.update({
+      where: { shortCode: trimmedSlug },
+      data: { clickCount: { increment: 1 } }
+    }).then(updated => {
+      console.log(`✅ Click count updated: ${trimmedSlug} = ${updated.clickCount}`)
+    }).catch(error => {
+      console.error('❌ Error updating click count:', error)
+    })
 
     // Redirect to the original URL
     return NextResponse.redirect(shortUrl.originalUrl)

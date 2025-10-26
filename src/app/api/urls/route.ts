@@ -29,6 +29,7 @@ export async function GET(request: NextRequest) {
       originalUrl: url.originalUrl,
       shortCode: url.shortCode,
       shortUrl: `${baseUrl}/${url.shortCode}`,
+      clickCount: url.clickCount,
       createdAt: url.createdAt,
     }))
 

@@ -406,11 +406,28 @@ function DragDropUrlShortener({ setIsSignup }: { setIsSignup: (value: boolean) =
 
   const copyToClipboard = async () => {
     try {
-      await navigator.clipboard.writeText(shortenedUrl);
+      // Try modern clipboard API first
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(shortenedUrl);
+      } else {
+        // Fallback for older browsers
+        const textArea = document.createElement('textarea');
+        textArea.value = shortenedUrl;
+        textArea.style.position = 'fixed';
+        textArea.style.left = '-999999px';
+        textArea.style.top = '-999999px';
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+      }
       setIsCopied(true);
       setTimeout(() => setIsCopied(false), 2000);
     } catch (err) {
       console.error('Failed to copy: ', err);
+      // Show a fallback message or handle the error gracefully
+      alert('Failed to copy to clipboard. Please copy manually: ' + shortenedUrl);
     }
   };
 
@@ -456,74 +473,63 @@ function DragDropUrlShortener({ setIsSignup }: { setIsSignup: (value: boolean) =
            </div>
          </div>
 
-         {/* Mobile URL Selection */}
-         <div className="sm:hidden space-y-3">
-           {!hasUsedDemo && (
-             <>
+         {/* Mobile URL Selection & Result Display */}
+         <div className="sm:hidden">
+           {!hasUsedDemo && !isProcessing && !isCompleted ? (
+             <div className="space-y-3">
                <p className="text-sm text-gray-400">Tap any URL below to shorten it:</p>
-               {!isProcessing && !isCompleted && (
-                 <div className="grid grid-cols-1 gap-2">
-                   {sampleUrls.map((url, index) => (
-                     <div
-                       key={index}
-                       onClick={() => handleMobileUrlTap(url)}
-                       className="p-3 bg-gray-700/50 rounded-lg border border-gray-600/50 transition-all duration-200 hover:bg-gray-600/50 hover:border-purple-500/50 hover:scale-105 active:scale-95 cursor-pointer"
-                     >
-                       <div className="flex items-center gap-2">
-                         <Link className="h-4 w-4 text-purple-400 flex-shrink-0" />
-                         <span className="text-sm text-white truncate">{url}</span>
-                       </div>
+               <div className="grid grid-cols-1 gap-2">
+                 {sampleUrls.map((url, index) => (
+                   <div
+                     key={index}
+                     onClick={() => handleMobileUrlTap(url)}
+                     className="p-3 bg-gray-700/50 rounded-lg border border-gray-600/50 transition-all duration-200 hover:bg-gray-600/50 hover:border-purple-500/50 hover:scale-105 active:scale-95 cursor-pointer"
+                   >
+                     <div className="flex items-center gap-2">
+                       <Link className="h-4 w-4 text-purple-400 flex-shrink-0" />
+                       <span className="text-sm text-white truncate">{url}</span>
                      </div>
-                   ))}
+                   </div>
+                 ))}
+               </div>
+             </div>
+           ) : isProcessing ? (
+             <div className="text-center space-y-4 py-6">
+               <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-purple-400 mx-auto"></div>
+               <p className="text-purple-400 font-medium">Shortening URL...</p>
+             </div>
+           ) : isCompleted ? (
+             <div className="space-y-4 py-4">
+               <div className="text-center">
+                 <CheckCircle className="h-10 w-10 text-green-400 mx-auto mb-3" />
+                 <p className="text-green-400 font-medium mb-4">URL Shortened Successfully!</p>
+               </div>
+               <div className="bg-gray-800/50 rounded-lg p-4">
+                 <div className="text-sm text-gray-400 mb-2">Your short URL:</div>
+                 <div className="flex flex-col gap-2">
+                   <div className="text-purple-400 font-mono text-sm break-all">{shortenedUrl}</div>
+                   <button
+                     onClick={copyToClipboard}
+                     className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 cursor-pointer ${
+                       isCopied 
+                         ? 'bg-green-500 hover:bg-green-600' 
+                         : 'bg-purple-600 hover:bg-purple-700'
+                     }`}
+                   >
+                     {isCopied ? '✓ Copied!' : 'Copy'}
+                   </button>
                  </div>
-               )}
-             </>
-           )}
+               </div>
+               <p className="text-center text-sm text-purple-400">Demo complete! Sign up for unlimited URL shortening</p>
+             </div>
+           ) : hasUsedDemo ? (
+             <div className="text-center space-y-4 py-6">
+               <Upload className="h-10 w-10 text-gray-500 mx-auto" />
+               <p className="text-gray-400">Demo limit reached</p>
+               <p className="text-sm text-purple-400">Sign up above for unlimited URL shortening</p>
+             </div>
+           ) : null}
          </div>
-
-        {/* Mobile Result Display */}
-        <div className="sm:hidden">
-          {isProcessing ? (
-            <div className="text-center space-y-4 py-8">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-400 mx-auto"></div>
-              <p className="text-purple-400 font-medium">Shortening URL...</p>
-            </div>
-          ) : isCompleted ? (
-            <div className="text-center space-y-4 py-8">
-              <div className="flex items-center justify-center">
-                <CheckCircle className="h-12 w-12 text-green-400" />
-              </div>
-              <div className="space-y-3">
-                <p className="text-green-400 font-medium">URL Shortened Successfully!</p>
-                <div className="bg-gray-800/50 rounded-lg p-4">
-                  <div className="text-sm text-gray-400 mb-2">Your short URL:</div>
-                  <div className="flex items-center gap-2">
-                    <div className="text-purple-400 font-mono text-lg flex-1 truncate">{shortenedUrl}</div>
-                    <button
-                      onClick={copyToClipboard}
-                      className={`px-3 py-2 rounded-lg font-medium transition-all duration-200 cursor-pointer ${
-                        isCopied 
-                          ? 'bg-green-500 hover:bg-green-600' 
-                          : 'bg-purple-600 hover:bg-purple-700'
-                      }`}
-                    >
-                      {isCopied ? '✓ Copied!' : 'Copy'}
-                    </button>
-                  </div>
-                </div>
-                <p className="text-sm text-purple-400">Demo complete! Sign up for unlimited URL shortening</p>
-              </div>
-            </div>
-          ) : hasUsedDemo ? (
-            <div className="text-center space-y-4 py-8">
-              <div className="flex items-center justify-center">
-                <Upload className="h-12 w-12 text-gray-500" />
-              </div>
-              <p className="text-gray-400">Demo limit reached</p>
-              <p className="text-sm text-purple-400">Sign up above for unlimited URL shortening</p>
-            </div>
-          ) : null}
-        </div>
 
         {/* Drop Zone - Desktop Only */}
         <div
@@ -654,12 +660,29 @@ function LiveUrlShortener({ setIsSignup }: { setIsSignup: (value: boolean) => vo
 
   const copyToClipboard = async () => {
     try {
-      await navigator.clipboard.writeText(shortUrl);
+      // Try modern clipboard API first
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(shortUrl);
+      } else {
+        // Fallback for older browsers
+        const textArea = document.createElement('textarea');
+        textArea.value = shortUrl;
+        textArea.style.position = 'fixed';
+        textArea.style.left = '-999999px';
+        textArea.style.top = '-999999px';
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+      }
       setIsCopied(true);
       // Reset the copied state after 2 seconds
       setTimeout(() => setIsCopied(false), 2000);
     } catch (err) {
       console.error('Failed to copy: ', err);
+      // Show a fallback message or handle the error gracefully
+      alert('Failed to copy to clipboard. Please copy manually: ' + shortUrl);
     }
   };
 
@@ -889,12 +912,14 @@ function LandingPageContent() {
           <div className={`space-y-4 sm:space-y-6 text-center lg:text-left ${currentSection !== 'hero' ? 'lg:block hidden' : ''}`}>
             <div className="space-y-4">
               <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-white via-purple-200 to-white bg-clip-text text-transparent leading-tight">
-                <TypewriterText 
-                  text="Shorten URLs Instantly" 
-                  speed={150} 
-                  coloredText="Instantly" 
-                  coloredStart={13}
-                />
+                <div className="inline-block min-w-full whitespace-nowrap">
+                  <TypewriterText 
+                    text="Shorten URLs Instantly" 
+                    speed={150} 
+                    coloredText="Instantly" 
+                    coloredStart={13}
+                  />
+                </div>
               </h1>
               <p className="text-sm sm:text-base text-gray-300 leading-relaxed">
                 Create short, memorable links that are easy to share and track. 
@@ -967,7 +992,7 @@ function LandingPageContent() {
 
              {/* CTA */}
              <div className="text-center">
-               <p className="text-base sm:text-lg text-gray-300">
+               <p className="text-sm sm:text-base text-gray-300">
                  Ready to get started? {isSignup ? 'Create an account' : 'Sign in'} to create your first short URL.
                </p>
              </div>

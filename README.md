@@ -21,7 +21,7 @@ A modern, production-quality URL shortener built with Next.js, Tailwind CSS, Pri
 - **Animations**: Framer Motion
 - **Authentication**: NextAuth.js with multiple providers
 - **Backend**: Next.js API Routes
-- **Database**: Prisma ORM with SQLite (local) / PostgreSQL (production)
+- **Database**: Prisma ORM with PostgreSQL
 - **Deployment**: Railway (full-stack hosting)
 
 ## 📦 Installation
@@ -118,8 +118,7 @@ Your app will be available at: `https://your-app.up.railway.app`
 ```
 URLShorter/
 ├── prisma/
-│   ├── schema.prisma            # Database schema
-│   └── dev.db                   # SQLite database (local)
+│   └── schema.prisma            # Database schema
 ├── src/
 │   ├── app/
 │   │   ├── api/

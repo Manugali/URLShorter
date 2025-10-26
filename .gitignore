@@ -17,8 +17,7 @@ out/
 build/
 
 # Database
-prisma/dev.db
-prisma/dev.db-journal
+# PostgreSQL database files are not tracked as they're hosted externally
 
 # IDE
 .vscode/

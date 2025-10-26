@@ -1,8 +1,11 @@
 const fs = require('fs');
 const path = require('path');
 
-const envContent = `# Database
-DATABASE_URL="file:./dev.db"
+const envContent = `# Database (PostgreSQL)
+# For local development, you can use a local PostgreSQL instance or Railway's free tier
+# DATABASE_URL="postgresql://username:password@localhost:5432/shortly"
+# For production, use Railway PostgreSQL:
+# DATABASE_URL="postgresql://postgres:password@host:port/railway"
 
 # NextAuth.js
 NEXTAUTH_URL="http://localhost:3000"

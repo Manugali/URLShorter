@@ -69,6 +69,7 @@ export async function POST(request: NextRequest) {
       originalUrl: shortUrl.originalUrl,
       shortCode: shortUrl.shortCode,
       shortUrl: shortUrlWithDomain,
+      clickCount: shortUrl.clickCount,
       createdAt: shortUrl.createdAt,
     })
   } catch (error) {

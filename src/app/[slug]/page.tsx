@@ -36,6 +36,17 @@ export default async function RedirectPage({ params }: PageProps) {
     )
   }
 
+  // Increment click count (fire and forget)
+  console.log(`🔄 Incrementing click count for: ${slug}, current: ${shortUrl.clickCount}`)
+  prisma.shortUrl.update({
+    where: { shortCode: slug },
+    data: { clickCount: { increment: 1 } }
+  }).then(updated => {
+    console.log(`✅ Click count updated: ${slug} = ${updated.clickCount}`)
+  }).catch(error => {
+    console.error('❌ Error updating click count:', error)
+  })
+
   // This will throw NEXT_REDIRECT which is expected behavior
   redirect(shortUrl.originalUrl)
 }
