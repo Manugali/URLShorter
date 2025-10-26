@@ -101,7 +101,7 @@ export function SignupForm() {
           <Button
             onClick={() => handleOAuthLogin("google")}
             variant="outline"
-            className="w-full"
+            className="w-full cursor-pointer"
             disabled={isLoading}
           >
             <Mail className="w-4 h-4 mr-2" />
@@ -110,7 +110,7 @@ export function SignupForm() {
           <Button
             onClick={() => handleOAuthLogin("github")}
             variant="outline"
-            className="w-full"
+            className="w-full cursor-pointer"
             disabled={isLoading}
           >
             <Github className="w-4 h-4 mr-2" />
@@ -158,7 +158,7 @@ export function SignupForm() {
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 cursor-pointer"
               >
                 {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
               </button>
@@ -175,7 +175,7 @@ export function SignupForm() {
               <button
                 type="button"
                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 cursor-pointer"
               >
                 {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
               </button>
@@ -188,7 +188,7 @@ export function SignupForm() {
             </div>
           )}
           
-          <Button type="submit" className="w-full" disabled={isLoading}>
+          <Button type="submit" className="w-full cursor-pointer" disabled={isLoading}>
             {isLoading ? (
               <>
                 <UserPlus className="w-4 h-4 mr-2 animate-spin" />
@@ -208,8 +208,12 @@ export function SignupForm() {
             Already have an account?{" "}
             <button
               type="button"
-              onClick={() => window.location.href = "/landing"}
-              className="text-purple-400 hover:text-purple-300 underline"
+              onClick={() => {
+                // This will be handled by the parent component
+                const event = new CustomEvent('switchToSignin');
+                window.dispatchEvent(event);
+              }}
+              className="text-purple-400 hover:text-purple-300 underline cursor-pointer"
             >
               Sign in
             </button>
